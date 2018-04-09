@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="NIO,Netty,Java I/O," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="chapter1 1.UNIX提供的5中I/O模型 (1) 阻塞I/O模型：最常用的I/O模型，缺省情形下，所有的文件操作都是阻塞的。我们以套接字接口为例来讲解此模型：在进程空间中调用recvfrom, 其系统调用直到数据包到达且被复制到应用缓冲区中或者发生错误时才返回，在此期间一直会等待，进程在从调用recvfrom开始到它返回的整段时间内都是被阻塞的，因此被称为阻塞I/O模型，如图1-1所示。">
+<meta name="keywords" content="NIO,Netty,Java I&#x2F;O">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Netty权威指南笔记(一)">
+<meta property="og:url" content="https://shanqchen.github.io/2018/04/09/NettyGuide1/index.html">
+<meta property="og:site_name" content="Crossroads X">
+<meta property="og:description" content="chapter1 1.UNIX提供的5中I/O模型 (1) 阻塞I/O模型：最常用的I/O模型，缺省情形下，所有的文件操作都是阻塞的。我们以套接字接口为例来讲解此模型：在进程空间中调用recvfrom, 其系统调用直到数据包到达且被复制到应用缓冲区中或者发生错误时才返回，在此期间一直会等待，进程在从调用recvfrom开始到它返回的整段时间内都是被阻塞的，因此被称为阻塞I/O模型，如图1-1所示。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://shanqchen.github.io/2018/04/09/NettyGuide1/1-1同步阻塞IO.png">
+<meta property="og:image" content="https://shanqchen.github.io/2018/04/09/NettyGuide1/1-2非阻塞IO模型.png">
+<meta property="og:image" content="https://shanqchen.github.io/2018/04/09/NettyGuide1/1-3IO复用模型.png">
+<meta property="og:image" content="https://shanqchen.github.io/2018/04/09/NettyGuide1/1-4信号驱动IO模型.png">
+<meta property="og:image" content="https://shanqchen.github.io/2018/04/09/NettyGuide1/1-5异步IO模型.png">
+<meta property="og:image" content="https://shanqchen.github.io/2018/04/09/NettyGuide1/2-1BIO通信模型.png">
+<meta property="og:image" content="https://shanqchen.github.io/2018/04/09/NettyGuide1/2-5伪异步IO模型.png">
+<meta property="og:image" content="https://shanqchen.github.io/2018/04/09/NettyGuide1/2-10NIO服务端通信序列图.png">
+<meta property="og:image" content="https://shanqchen.github.io/2018/04/09/NettyGuide1/2-11NIO客户端通信序列图.png">
+<meta property="og:updated_time" content="2018-04-09T13:45:18.638Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Netty权威指南笔记(一)">
+<meta name="twitter:description" content="chapter1 1.UNIX提供的5中I/O模型 (1) 阻塞I/O模型：最常用的I/O模型，缺省情形下，所有的文件操作都是阻塞的。我们以套接字接口为例来讲解此模型：在进程空间中调用recvfrom, 其系统调用直到数据包到达且被复制到应用缓冲区中或者发生错误时才返回，在此期间一直会等待，进程在从调用recvfrom开始到它返回的整段时间内都是被阻塞的，因此被称为阻塞I/O模型，如图1-1所示。">
+<meta name="twitter:image" content="https://shanqchen.github.io/2018/04/09/NettyGuide1/1-1同步阻塞IO.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://shanqchen.github.io/2018/04/09/NettyGuide1/"/>
+
+
+
+
+
+  <title>Netty权威指南笔记(一) | Crossroads X</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Crossroads X</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shanqchen.github.io/2018/04/09/NettyGuide1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ken">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Crossroads X">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Netty权威指南笔记(一)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-09T23:19:41+09:00">
+                2018-04-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java基础/" itemprop="url" rel="index">
+                    <span itemprop="name">Java基础</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java基础/NIO/" itemprop="url" rel="index">
+                    <span itemprop="name">NIO</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>chapter1</p>
+<p>1.UNIX提供的5中I/O模型</p>
+<p>(1) 阻塞I/O模型：最常用的I/O模型，缺省情形下，所有的文件操作都是阻塞的。我们以套接字接口为例来讲解此模型：在进程空间中调用recvfrom, 其系统调用直到数据包到达且被复制到应用缓冲区中或者发生错误时才返回，在此期间一直会等待，进程在从调用recvfrom开始到它返回的整段时间内都是被阻塞的，因此被称为阻塞I/O模型，如图1-1所示。</p>
+<img src="/2018/04/09/NettyGuide1/1-1同步阻塞IO.png">
+<p>(2)非阻塞I/O模型：recvfrom从应用层到内核的时候，如果该缓冲区没有数据的话，就直接返回一个EWOULDBLOCK错误，一般都对非阻塞I/O模型进行轮询检查这个状态，看内核是不是有数据到来。如图1-2所示。</p>
+<img src="/2018/04/09/NettyGuide1/1-2非阻塞IO模型.png">
+<p>(3)I/O复用模型：Linux提供select/poll，进程通过将一个或多个fd传递给select或poll系统调用，阻塞在select操作上，这样select/poll可以帮助我们侦测多个fd是否处于就绪状态。select/poll是顺序扫描fd是否就绪，而且支持的fd数量有限，因此它的使用受到了一些制约，Linux还提供了一个epoll系统调用，epoll使用基于事件驱动方式代替顺序扫描，因此性能更高。当有fd就绪时，立即回调函数rollback。如图1-3所示。</p>
+<img src="/2018/04/09/NettyGuide1/1-3IO复用模型.png">
+<p>(4)信号驱动I/O模型：首先开启套接口信号驱动I/O功能，并通过系统调用sigaction执行一个信号处理函数（此系统调用立即返回，进程继续工作，它是非阻塞的）。当数据准备就绪时，就为该进程生成一个SIGIO信号，通过信号回调通知应用程序调用recvfrom来读取数据，并通知主函数处理数据。如图1-4所示。</p>
+<img src="/2018/04/09/NettyGuide1/1-4信号驱动IO模型.png">
+<p>(5)异步I/O：告知内核启动某个操作，并让内核在整个操作完成后（包括将数据从内核复制到用户自己的缓冲区）通知我们。这种模型与信号驱动模型的主要区别是：信号驱动I/O由内核通知我们何时可以开始一个I/O操作；异步I/O模型由内核通知我们I/O操作何时已经完成。如图1-5所示。</p>
+<img src="/2018/04/09/NettyGuide1/1-5异步IO模型.png">
+<p>chapter2</p>
+<p>网络编程的基本模型是Client/Server模型，也就是两个进程之间进行相互通信，其中服务端提供位置信息（绑定的IP地址和监听端口），客户端通过连接操作向服务端监听的地址发起连接请求，通过三次握手建立连接，如果建立连接成功，双方就可以通过网络套接字（Socket）进行通信。</p>
+<p>1.BIO编程</p>
+<p>BIO的服务端通信模型如图2-1所示：采用BIO通信模型的服务器，通常由一个独立的Acceptor线程负责监听客户端的连接，它接收到客户端的连接请求之后为每个客户端创建一个新的线程进行链路处理，处理完成之后，通过输出流返回应答给客户端，线程销毁。这就是典型的一请求一应答通信模型。<a href="https://github.com/shanqchen/BasicJava/blob/master/NIO/NIO/src/main/java/basic/java/NIO/netty/ch2/bio/TimeServer.java" target="_blank" rel="noopener">代码</a></p>
+<img src="/2018/04/09/NettyGuide1/2-1BIO通信模型.png">
+<p>BIO的主要问题：每当有一个新的客户端请求接入时，服务端必须创建一个新的线程处理新的接入的客户端链路，一个线程只能处理一个客户端连接。在高性能服务器应用领域，往往需要成千上万个客户端的并发连接，这种模型显然无法满足高性能、高并发接入的场景。</p>
+<p>BIO的主要问题：每当有一个新的客户端请求接入时，服务端必须创建一个新的线程处理新的接入的客户端链路，一个线程只能处理一个客户端连接。在高性能服务器应用领域，往往需要成千上万个客户端的并发连接，这种模型显然无法满足高性能、高并发接入的场景。</p>
+<p>2.伪异步I/O编程</p>
+<p>为了解决同步阻塞I/O面临的一个链路需要一个线程处理的问题，有人对它的线程模型进行了优化，后端通过一个线程池来处理多个客户端的请求接入，形成客户端个数M:线程池最大线程数N的比例关系，其中M可以远远大于N，通过线程池可以灵活的调配线程资源，设置线程的最大值，防止由于海量并发接入导致线程耗尽。</p>
+<p>采用线程池和任务队列可以实现一种叫做伪异步的I/O通信框架，它的模型如图2-5所示。当有新的客户端接入时，将客户端的Socket封装成一个Task(该任务实现了java.lang.Runnable接口)投递到后端的线程池中进行处理，JDK的线程池维护一个消息队列和N个活跃线程对消息队列中的任务进行处理。由于线程池可以设置消息队列的大小和最大线程数，因此，它的资源占用是可控的，无论多少个客户端并发访问，都不会导致资源的耗尽和宕机。<a href="https://github.com/shanqchen/BasicJava/blob/master/NIO/NIO/src/main/java/basic/java/NIO/netty/ch2/pseudoAsync/Timeserver.java" target="_blank" rel="noopener">代码</a></p>
+<img src="/2018/04/09/NettyGuide1/2-5伪异步IO模型.png">
+<p>伪异步I/O实际上仅仅只是对之前BIO的线程模型的一个简单优化，它无法从根本上解决同步I/O导致的通信线程阻塞问题。</p>
+<p>3.NIO编程</p>
+<p>名称（New I/O or Non-block I/O）</p>
+<p>与Socket类和ServerSocket类相对应，NIO也提供了SocketChannel和ServerSocketChannel两种不同的套接字通道实现。这两种新增的通道都支持阻塞和非阻塞两种模式。一般来说，低负载、低并发的应用程序可以选择同步阻塞I/O以降低编程复杂度，但对于高负载、高并发的网络应用，需要使用NIO的非阻塞模式进行开发。</p>
+<p>1.NIO类库简介</p>
+<p>(1)缓冲区Buffer</p>
+<p>ByteBuffer：字节缓冲区</p>
+<p>CharBuffer：字符缓冲区</p>
+<p>ShortBuffer：短整型缓冲区</p>
+<p>IntBuffer：整型缓冲区</p>
+<p>LongBuffer：长整型缓冲区</p>
+<p>FloatBuffer：浮点型缓冲区</p>
+<p>DoubleBuffer：双精度浮点型缓冲区</p>
+<p>(2)通道channel</p>
+<ul>
+<li>FileChannel</li>
+<li>DatagramChannel</li>
+<li>SocketChannel</li>
+<li>ServerSocketChannel</li>
+</ul>
+<p>(3)多路复用器Selector</p>
+<p>基于epoll()代替传统的select实现。<a href="https://www.cnblogs.com/wanghuaijun/p/6914810.html" target="_blank" rel="noopener">详情分析</a></p>
+<p>2.NIO服务端介绍</p>
+<p>(1)NIO服务端序列图</p>
+<p>NIO服务端序列图如图2-10所示。</p>
+<img src="/2018/04/09/NettyGuide1/2-10NIO服务端通信序列图.png">
+<p>(2)NIO服务端的主要创建过程</p>
+<p>步骤一：打开ServerSocketChannel, 用于监听客户端的连接，它是所有客户端连接的父管道，代码示例如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ServerSocketChannel acceptorSvr = ServerSocketChannel.open();</span><br></pre></td></tr></table></figure>
+<p>步骤二：绑定监听端口，设定连接为非阻塞模式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">acceptorSvr.socket().bind(<span class="keyword">new</span> InetSocketAddress(InetAddress.getByName(<span class="string">"IP"</span>), port));</span><br><span class="line">acceptorSvr.configureBlocking(<span class="keyword">false</span>);</span><br></pre></td></tr></table></figure>
+<p>步骤三：创建Reactor线程（<a href="https://www.cnblogs.com/doit8791/p/7461479.html" target="_blank" rel="noopener">Reactor模式</a>），创建多路复用器并启动线程：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Selector selector = Selector.open();</span><br><span class="line"><span class="function">New <span class="title">Thread</span><span class="params">(new ReactorTask()</span>).<span class="title">start</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+<p>步骤四：将ServerSocketChannel注册到Reactor线程的多路复用器Selector上，监听ACCEPT事件：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SelectionKey key = acceptorSvr.register(selector, SelectionKey.OP_ACCEPT, ioHandler);</span><br></pre></td></tr></table></figure>
+<p>步骤五：多路复用器在线程run()方法的无限循环体内轮询<strong>准备就绪</strong>的Key:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> num = selector.select();</span><br><span class="line">Set selectedKeys = selector.selectedKeys();</span><br><span class="line">Iterator it = selectedKeys.iterator();</span><br><span class="line"><span class="keyword">while</span>(it.hasNext())&#123;</span><br><span class="line">    SelectionKey key = (SelectionKey)it.next();</span><br><span class="line">    <span class="comment">//... deal with I/O event ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>步骤六：多路复用器监听到有新的客户端接入，处理新的接入请求，完成三次TCP握手，建立物理链路：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SocketChannel socketChannel = acceptorSvr.accept();</span><br></pre></td></tr></table></figure>
+<p>步骤七：设置客户端链路为非阻塞模式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">channel.configureBlocking(<span class="keyword">false</span>);</span><br><span class="line">channel.socket().setReuseAddress(<span class="keyword">true</span>);</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>步骤八：将新接入的客户端连接注册到Reactor线程的多路复用器上，监听读操作，用来读取客户端发送的网络消息：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SelectionKey key = socketChannel.register(selector, SelectionKey.OP_READ, ioHandler);</span><br></pre></td></tr></table></figure>
+<p>步骤九：异步读取客户端请求消息到缓冲区：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> readNumber = socketChannel.read(receivedBuffer);</span><br></pre></td></tr></table></figure>
+<p>步骤十：对ByteBuffer进行编解码，如果有半包消息指针reset，继续读取后续的报文，将解码成功的消息封装成Task, 投递到业务线程池中，进行业务逻辑编排：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">Object message = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">while</span>(buffer.hasRemain())&#123;</span><br><span class="line">    byteBuffer.mark();</span><br><span class="line">    Object message = decode(byteBuffer);</span><br><span class="line">    <span class="keyword">if</span>(message == <span class="keyword">null</span>)&#123;</span><br><span class="line">        byteBuffer.reset();</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    messageList.add(message);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>(!byteBuffer.hasRemain())&#123;</span><br><span class="line">    byteBuffer.clear();</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    byteBuffer.compact();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(messageList != <span class="keyword">null</span> &amp;&amp; !messageList.isEmpty())&#123;</span><br><span class="line">    <span class="keyword">for</span>(Object messageE : messageList)&#123;</span><br><span class="line">        hadlerTask(messageE); <span class="comment">//业务逻辑</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>步骤十一：将POJO对象encode成ByteBuffer, 调用SocketChannel的异步write()接口，将消息异步发送给客户端：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">socketChannel.write(buffer);</span><br></pre></td></tr></table></figure>
+<p><a href="https://github.com/shanqchen/BasicJava/blob/master/NIO/NIO/src/main/java/basic/java/NIO/netty/ch2/nio/TimeServer.java" target="_blank" rel="noopener">完整代码</a></p>
+<p>3.NIO客户端介绍</p>
+<p>(1)NIO客户端创建序列图</p>
+<p>NIO客户端创建序列图如图2-11所示。</p>
+<img src="/2018/04/09/NettyGuide1/2-11NIO客户端通信序列图.png">
+<p>(2)NIO客户端的主要创建过程</p>
+<p>步骤一：打开SocketChannel, 绑定客户端本地地址（可选，默认系统会随机分配一个可用的本地地址）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SocketChannel clientChannel = SocketChannel.open();</span><br></pre></td></tr></table></figure>
+<p>步骤二：设置SocketChannel为非阻塞模式，同时设置客户端连接的TCP参数：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">clientChannel.configureBlocking(<span class="keyword">false</span>);</span><br><span class="line">socket.setReuseAddress(<span class="keyword">true</span>);</span><br><span class="line">socket.setReceiveBufferSize(BUFFER_SIZE);</span><br><span class="line">socket.setSendBufferSize(BUFFER_SIZE);</span><br></pre></td></tr></table></figure>
+<p>步骤三：异步连接服务端：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">boolean</span> connected = clientChannel.connect(<span class="keyword">new</span> InetSocketAddress(<span class="string">"IP"</span>, port));</span><br></pre></td></tr></table></figure>
+<p>步骤四：判断是否连接成功，如果连接成功，则直接注册读状态位到多路复用器中，如果当前没有连接成功（异步连接，返回false，说明客户端已经发送sync包，服务端没有返回ack包，物理链路还没有 建立）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(connected)&#123;</span><br><span class="line">    clientChannel.register(selector, SelectionKey.OP_READ, ioHandler);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    clientChannel.register(selector, SelectionKey.OP_CONNECT, ioHandler);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>步骤五：向Reactor线程的多路复用器注册OP_CONNECT状态位，监听服务器端的ACK应答:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clientChannel.register(selector, SelectionKey.OP_CONNECT, ioHandler);</span><br></pre></td></tr></table></figure>
+<p>步骤六：创建Reactor线程（<a href="https://www.cnblogs.com/doit8791/p/7461479.html" target="_blank" rel="noopener">Reactor模式</a>），创建多路复用器并启动线程：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Selector selector = Selector.open();</span><br><span class="line"><span class="function">New <span class="title">Thread</span><span class="params">(new ReactorTask()</span>).<span class="title">start</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+<p>步骤七：多路复用器在线程run()方法的无限循环体内轮询<strong>准备就绪</strong>的Key:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> num = selector.select();</span><br><span class="line">Set selectedKeys = selector.selectedKeys();</span><br><span class="line">Iterator it = selectedKeys.iterator();</span><br><span class="line"><span class="keyword">while</span>(it.hasNext())&#123;</span><br><span class="line">    SelectionKey key = (SelectionKey)it.next();</span><br><span class="line">    <span class="comment">//... deal with I/O event ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>步骤八：接收connect事件进行处理：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(key.isConnectable())&#123;</span><br><span class="line">    <span class="comment">//handleConnect();</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>步骤九：判断连接结果，如果连接成功，注册读事件到多路复用器：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(channel.finishConnect())&#123;</span><br><span class="line">    registerRead();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>步骤十：注册读事件到多路复用器：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clientChannel.register(selector, SelectionKey.OP_READ, ioHandler);</span><br></pre></td></tr></table></figure>
+<p>步骤十一：异步读取客户端请求消息到缓冲区：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> readNumber = socketChannel.read(receivedBuffer);</span><br></pre></td></tr></table></figure>
+<p>步骤十二：对ByteBuffer进行编解码，如果有半包消息指针reset，继续读取后续的报文，将解码成功的消息封装成Task, 投递到业务线程池中，进行业务逻辑编排：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">Object message = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">while</span>(buffer.hasRemain())&#123;</span><br><span class="line">    byteBuffer.mark();</span><br><span class="line">    Object message = decode(byteBuffer);</span><br><span class="line">    <span class="keyword">if</span>(message == <span class="keyword">null</span>)&#123;</span><br><span class="line">        byteBuffer.reset();</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    messageList.add(message);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>(!byteBuffer.hasRemain())&#123;</span><br><span class="line">    byteBuffer.clear();</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    byteBuffer.compact();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(messageList != <span class="keyword">null</span> &amp;&amp; !messageList.isEmpty())&#123;</span><br><span class="line">    <span class="keyword">for</span>(Object messageE : messageList)&#123;</span><br><span class="line">        hadlerTask(messageE); <span class="comment">//业务逻辑</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>步骤十三：将POJO对象encode成ByteBuffer, 调用SocketChannel的异步write()接口，将消息异步发送给客户端：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">socketChannel.write(buffer);</span><br></pre></td></tr></table></figure>
+<p><a href="https://github.com/shanqchen/BasicJava/blob/master/NIO/NIO/src/main/java/basic/java/NIO/netty/ch2/nio/TimeClient.java" target="_blank" rel="noopener">完整代码</a></p>
+<p>4.NIO编程的优点</p>
+<p>(1)客户端发起的连接操作是异步的，可以通过多路复用器注册OP_CONNECT等待后续结果，不需要像之前的客户端那样被同步阻塞。</p>
+<p>(2)SocketChannel的读写操作都是异步的，如果没有可读写的数据它不会同步等待，直接返回，这样I/O通信线程就可以处理其它的链路，不需要同步等待这个链路可用。</p>
+<p>(3)线程模型的优化：由于JDK的Selector在Linux等主流操作系统上通过epoll实现，它没有句柄数的限制（只受限于操作系统最大句柄数或者对单个进程的句柄限制），这意味着一个Selector线程可以同时处理成千上万个客户端连接，而且性能不会随着客户端的增加而线性下降，因此，它非常适合做高性能、高负载的网络服务器。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>喜欢就点赞！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="Ken 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/NIO/" rel="tag"># NIO</a>
+          
+            <a href="/tags/Netty/" rel="tag"># Netty</a>
+          
+            <a href="/tags/Java-I-O/" rel="tag"># Java I/O</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/11/微软100题-11题-求二叉树中节点的最大距离/" rel="next" title="微软100题-#11题-求二叉树中节点的最大距离">
+                <i class="fa fa-chevron-left"></i> 微软100题-#11题-求二叉树中节点的最大距离
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="uyan_frame"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Ken</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ken</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+    
+
+    
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2152728"></script>
+      <!-- UY END -->
+    
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
