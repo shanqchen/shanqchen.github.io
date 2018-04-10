@@ -1,0 +1,18 @@
+1-1同步阻塞IO.png	{% asset_img 1-1同步阻塞IO.png %}
+
+1-2非阻塞IO模型.png	{% asset_img 1-2非阻塞IO模型.png %}
+
+1-3IO复用模型.png	{% asset_img 1-3IO复用模型.png %}
+
+1-4信号驱动IO模型.png	{% asset_img 1-4信号驱动IO模型.png %}
+
+1-5异步IO模型.png	{% asset_img 1-5异步IO模型.png %}
+
+2-1BIO通信模型.png	{% asset_img 2-1BIO通信模型.png %}
+
+2-5伪异步IO模型.png	{% asset_img 2-5伪异步IO模型.png %}
+
+2-10NIO服务端通信序列图.png	{% asset_img 2-10NIO服务端通信序列图.png %}
+
+2-11NIO客户端通信序列图.png	{% asset_img 2-11NIO客户端通信序列图.png %}
+

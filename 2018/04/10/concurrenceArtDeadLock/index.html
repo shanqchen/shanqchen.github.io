@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="deadLock," />
 
 
 
@@ -79,13 +79,20 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Crossroads X">
-<meta property="og:url" content="https://shanqchen.github.io/categories/Java基础/index.html">
+<meta name="description" content="死锁 锁是一个非常有用的工具，运用场景非常多，因为它使用起来非常简单，而且易于理解。但同时它也会带来一些困扰，那就是可能会引起死锁。死锁是多线程编程里比较容易碰到的一个问题，尤其是锁嵌套的情况下，极易发生互相请求锁资源而不得的情况，下面给出一个简单的死锁示例。 123456789101112131415161718192021222324252627282930313233343536packag">
+<meta name="keywords" content="deadLock">
+<meta property="og:type" content="article">
+<meta property="og:title" content="死锁演示">
+<meta property="og:url" content="https://shanqchen.github.io/2018/04/10/concurrenceArtDeadLock/index.html">
 <meta property="og:site_name" content="Crossroads X">
+<meta property="og:description" content="死锁 锁是一个非常有用的工具，运用场景非常多，因为它使用起来非常简单，而且易于理解。但同时它也会带来一些困扰，那就是可能会引起死锁。死锁是多线程编程里比较容易碰到的一个问题，尤其是锁嵌套的情况下，极易发生互相请求锁资源而不得的情况，下面给出一个简单的死锁示例。 123456789101112131415161718192021222324252627282930313233343536packag">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://shanqchen.github.io/2018/04/10/concurrenceArtDeadLock/jstackShowDeadLock.png">
+<meta property="og:updated_time" content="2018-04-10T02:54:46.605Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Crossroads X">
+<meta name="twitter:title" content="死锁演示">
+<meta name="twitter:description" content="死锁 锁是一个非常有用的工具，运用场景非常多，因为它使用起来非常简单，而且易于理解。但同时它也会带来一些困扰，那就是可能会引起死锁。死锁是多线程编程里比较容易碰到的一个问题，尤其是锁嵌套的情况下，极易发生互相请求锁资源而不得的情况，下面给出一个简单的死锁示例。 123456789101112131415161718192021222324252627282930313233343536packag">
+<meta name="twitter:image" content="https://shanqchen.github.io/2018/04/10/concurrenceArtDeadLock/jstackShowDeadLock.png">
 
 
 
@@ -115,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="https://shanqchen.github.io/categories/Java基础/"/>
+  <link rel="canonical" href="https://shanqchen.github.io/2018/04/10/concurrenceArtDeadLock/"/>
 
 
 
 
 
-  <title>分类: Java基础 | Crossroads X</title>
+  <title>死锁演示 | Crossroads X</title>
   
 
 
@@ -140,7 +147,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -278,55 +285,226 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block category">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>Java基础<small>分类</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shanqchen.github.io/2018/04/10/concurrenceArtDeadLock/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ken">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Crossroads X">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/04/09/NettyGuide1/" itemprop="url">
-              
-                <span itemprop="name">Netty权威指南笔记(一)</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">死锁演示</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-04-09T22:19:41+08:00"
-              content="2018-04-09" >
-          04-09
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-10T12:32:25+09:00">
+                2018-04-10
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/并发/" itemprop="url" rel="index">
+                    <span itemprop="name">并发</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/并发/并发编程艺术笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">并发编程艺术笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>死锁</p>
+<p>锁是一个非常有用的工具，运用场景非常多，因为它使用起来非常简单，而且易于理解。但同时它也会带来一些困扰，那就是可能会引起死锁。死锁是多线程编程里比较容易碰到的一个问题，尤其是锁嵌套的情况下，极易发生互相请求锁资源而不得的情况，下面给出一个简单的死锁示例。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> basic.demo.concurrence.art.chapter1;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DeadLockDemo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String A = <span class="string">"A"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String B = <span class="string">"B"</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">new</span> DeadLockDemo().deadLock();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@SuppressWarnings</span>(<span class="string">"static-access"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">deadLock</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">            <span class="keyword">synchronized</span>(A)&#123;</span><br><span class="line">                <span class="keyword">try</span>&#123;</span><br><span class="line">                    Thread.currentThread().sleep(<span class="number">2000</span>);</span><br><span class="line">                &#125;<span class="keyword">catch</span>(InterruptedException e)&#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">                <span class="keyword">synchronized</span>(B)&#123;</span><br><span class="line">                    System.out.println(<span class="string">"1"</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">            <span class="keyword">synchronized</span>(B)&#123;</span><br><span class="line">                <span class="keyword">synchronized</span>(A)&#123;</span><br><span class="line">                    System.out.println(<span class="string">"2"</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行程序后，<code>console</code>没有任何输出，死锁发生。</p>
+<p>检测方法：</p>
+<ul>
+<li><p>在cmd窗口中输入jps指令，会列出当前所有的Java进程</p>
+<p>C:\Users\chens&gt;<strong>jps</strong><br>1744 org.eclipse.equinox.launcher_1.3.100.v20150511-1540.jar<br>11460 DeadLockDemo<br>3276 Jps</p>
+</li>
+<li><p>使用<strong>jstack</strong> &lt;<strong>进程编号</strong>&gt;输出当前Java进程的状态，如下图所示：</p>
+</li>
+</ul>
+<img src="/2018/04/10/concurrenceArtDeadLock/jstackShowDeadLock.png">
+<p>如何避免死锁：</p>
+<ul>
+<li>避免一个线程同时获取过多的锁</li>
+<li>避免一个线程在锁内同时占有过多资源</li>
+<li>尽量使用lock.tryLock(timeout)替代使用内部锁机制</li>
+<li>对于数据库锁，在一个连接内包含加锁和解锁动作，避免出现解锁失败的情况</li>
+</ul>
+<p>参考资料：</p>
+<p><a href="https://blog.csdn.net/zlbflying/article/details/51163473" target="_blank" rel="noopener">https://blog.csdn.net/zlbflying/article/details/51163473</a></p>
+<p>《Java并发编程的艺术》</p>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>喜欢就点赞！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="Ken 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/deadLock/" rel="tag"># deadLock</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/09/NettyGuide1/" rel="next" title="Netty权威指南笔记(一)">
+                <i class="fa fa-chevron-left"></i> Netty权威指南笔记(一)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -334,6 +512,15 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      <div id="uyan_frame"></div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -557,6 +744,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
 
   
 
@@ -582,6 +773,10 @@
   
     
 
+    
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2152728"></script>
+      <!-- UY END -->
     
   
 
